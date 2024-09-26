@@ -9,7 +9,11 @@ import {
   Alert,
 } from "react-native";
 
-const ShoppingListItem = ({ title }: { title: string }) => {
+type PropList = {
+  title: string,
+  isCompleted?: boolean,
+};
+const ShoppingListItem = ({ title, isCompleted }: PropList) => {
   const handleDelete = () => {
     Alert.alert(
       `Are you sure you want to delete ${title}`,
@@ -28,9 +32,27 @@ const ShoppingListItem = ({ title }: { title: string }) => {
     );
   };
   return (
-    <View style={styles.itemContainer}>
-      <Text style={styles.itemText}>{title}</Text>
-      <TouchableOpacity style={styles.Button} onPress={handleDelete}>
+    <View
+      style={[
+        styles.itemContainer,
+        isCompleted ? styles.completedContainer : undefined,
+      ]}
+    >
+      <Text
+        style={[
+          styles.itemText,
+          isCompleted ? styles.completedText : undefined,
+        ]}
+      >
+        {title}
+      </Text>
+      <TouchableOpacity
+        style={[
+          styles.Button,
+          isCompleted ? styles.completedButton : undefined,
+        ]}
+        onPress={handleDelete}
+      >
         <Text style={styles.textColor}>Delete</Text>
       </TouchableOpacity>
     </View>
@@ -53,9 +75,19 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
+  completedContainer: {
+    backgroundColor: theme.colorLightGrey,
+    borderBottomColor: theme.colorCerulean,
+  },
+  completedButton: {
+    backgroundColor: theme.colorGrey,
+  },
   itemText: {
     fontSize: 18,
     fontWeight: "200",
+  },
+  completedText: {
+    textDecorationLine: "line-through",
   },
   Button: {
     backgroundColor: theme.colorBlack,
