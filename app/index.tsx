@@ -1,4 +1,4 @@
-import { StyleSheet, TextInput, ScrollView } from "react-native";
+import { StyleSheet, TextInput, Text, FlatList, View } from "react-native";
 import ShoppingListItem from "../components/ShoppingListItem";
 import { theme } from "../theme";
 import { useState } from "react";
@@ -14,8 +14,7 @@ const initialList: ShoppingListItemType[] = [
   { id: "3", name: "Milk" },
 ];
 export default function App() {
-  const [shoppingList, setShoppingList] =
-    useState<ShoppingListItemType[]>(initialList);
+  const [shoppingList, setShoppingList] = useState<ShoppingListItemType[]>([]);
   const [value, setValue] = useState("");
 
   const handleSubmit = () => {
@@ -30,23 +29,27 @@ export default function App() {
   };
 
   return (
-    <ScrollView
+    <FlatList
       style={styles.container}
-      contentContainerStyle={styles.contentContainer}
+      data={shoppingList}
       stickyHeaderIndices={[0]}
-    >
-      <TextInput
-        style={styles.textInput}
-        placeholder="E.g Coffee"
-        value={value}
-        onChangeText={setValue}
-        returnKeyType="previous"
-        onSubmitEditing={handleSubmit}
-      />
-      {shoppingList.map((item) => (
-        <ShoppingListItem title={item.name} key={item.id} />
-      ))}
-    </ScrollView>
+      renderItem={({ item }) => <ShoppingListItem title={item.name} />}
+      ListEmptyComponent={
+        <View style={styles.listEmptyContainer}>
+          <Text>Your shopping list is empty</Text>
+        </View>
+      }
+      ListHeaderComponent={
+        <TextInput
+          style={styles.textInput}
+          placeholder="E.g Coffee"
+          value={value}
+          onChangeText={setValue}
+          returnKeyType="previous"
+          onSubmitEditing={handleSubmit}
+        />
+      }
+    ></FlatList>
   );
 }
 
@@ -68,5 +71,10 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingBottom: 24,
+  },
+  listEmptyContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginVertical: 18,
   },
 });
